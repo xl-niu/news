@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cg">
+
+    <select id="yqwdh" resultType="pd">
+        select distinct pmm01,cgy,qgy,pmn041,ima021,pmmcond,cgzq,pmn34,htgddhq,pmn20,pmn50,YSHWSH,YSHWRK
+        from(
+        SELECT
+        row_number () over ( ORDER BY pmm01 ) AS otherID,
+        pmm01,cgy,qgy,pmn041,ima021,pmmcond,cgzq,pmn34, xtjsdhq,htgddhq,pmn20,pmn50,RVA06,YSHWSH,YSHWRK FROM
+        (
+        SELECT DISTINCT
+        pmm01,pmm12,B.gen02 AS cgy,pmk12,E.gen02 AS qgy,pmn04,pmn34, pmn041,ima021,pmmcond,nvl( ima48 + ima491, 15 ) AS cgzq,
+        nvl( to_char( pmmcond + nvl( ima48 + ima491, 15 ), 'yyyy-mm-dd' ), '1900-01-01' ) AS xtjsdhq,
+        nvl(pmn33,to_date( '1900-01-01', 'yyyy-mm-dd' )) AS htgddhq,pmn20,pmn50,H.RVA06 AS RVA06,(
+            SELECT NVL( SUM( NVL( I.rvb07, 0 )), 0 )
+            FROM rvb_file I
+            INNER JOIN rva_file J ON J.rva01 = I.rvb01
+            WHERE I.rvb04 = pmn01 AND I.rvb02 = pmn02 AND J.rvaconf = 'N'
+        ) AS YSHWSH,
+        (
+            SELECT nvl( sum( NVL( K.rvb07, 0 ) - nvl( K.rvb30, 0 )), 0 )
+            FROM rvb_file K
+            INNER JOIN rva_file L ON L.rva01 = K.rvb01
+            WHERE K.rvb04 = pmn01 AND K.rvb02 = pmn02 AND L.rvaconf = 'Y'
+        ) AS YSHWRK
+        FROM pmm_file A
+        INNER JOIN gen_file B ON pmm12 = B.gen01
+        INNER JOIN pmn_file C ON pmm01 = pmn01
+        INNER JOIN pmk_file D ON pmn24 = pmk01
+        INNER JOIN gen_file E ON pmk12 = E.gen01
+        INNER JOIN ima_file F ON IMA01 = pmn04
+        LEFT JOIN rvb_file G ON rvb04 = pmn01 AND rvb02 = pmn02
+        LEFT JOIN rva_file H ON rva01 = G.RVB01 AND rvaconf = 'Y'
+        WHERE pmn20 > pmn50 AND pmm18 = 'Y' AND pmn16 NOT IN ( '6', '7', '8', '9' )
+        AND (( pmm01 NOT LIKE 'CB01%' ) OR ( PMM01 LIKE 'CB01%' AND RVA06 IS NOT NULL )))
+        WHERE to_date( xtjsdhq, 'yyyy-mm-dd' ) <![CDATA[ <=]]> to_date( to_char( SYSDATE, 'yyyy-mm-dd' ), 'yyyy-mm-dd' )
+        AND htgddhq <![CDATA[ <= ]]> to_date( to_char( SYSDATE, 'yyyy-mm-dd' ), 'yyyy-mm-dd' ) --and
+        --pmm01 like '%" + s_cgdh + "%' and
+        --qgy like '" + s_qgr + "' and
+        --cgy like '" + s_cgr + "' and
+        --pmn041 like '" + s_pinm + "'
+        )
+    </select>
+
+</mapper>

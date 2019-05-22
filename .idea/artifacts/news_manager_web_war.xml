@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="news-manager-web:war">
+    <output-path>$PROJECT_DIR$/news-manager/news-manager-web/target</output-path>
+    <root id="archive" name="news-manager-web.war">
+      <element id="artifact" artifact-name="news-manager-web:war exploded" />
+    </root>
+  </artifact>
+</component>

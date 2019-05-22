@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="meet">
+
+    <select id="getDayMeeting" parameterType="string" resultType="pd">
+        select * from meetingRoom
+        where meetDate =CONVERT(varchar(100), #{day}, 21)
+        order by meetRoom,meetKssj desc
+    </select>
+
+</mapper>

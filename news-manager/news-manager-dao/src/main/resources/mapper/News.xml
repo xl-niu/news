@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="news">
+
+    <select id="getNews" resultType="pd" parameterType="int">
+        select * from news where ClassID=#{ClassID} and approveFlag=2 and CommentFlag=1 order by CreateDate desc
+    </select>
+
+    <select id="getNewsTitle" resultType="pd" parameterType="int">
+        SELECT top (10) newTitle,CreateDate FROM news
+        WHERE ClassID =#{ClassID}
+        and approveFlag=2
+        and CommentFlag=1
+        order by CreateDate desc
+    </select>
+
+</mapper>
